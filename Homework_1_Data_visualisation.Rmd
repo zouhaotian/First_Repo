@@ -34,8 +34,9 @@
     ```{r}
     str(ggplot2::mpg)
     ```
-    Variable names were displayed after $
+    
     `manufacturer`, `model`, `trans`, `drv`, `fl`, `class` are categorical
+    
     `displ`, `year`, `cyl`, `cty`, `hwy` are continuous
 
 3.  Map a continuous variable to `color`, `size`, and `shape`. How do
@@ -45,7 +46,9 @@
     Answer: 
     
      `Color` can be mapped to a continuous variable. `Color` can be mapped to a categorical variable.
+     
     `Size` can be mapped to a continuous variable. `Size` can be mapped to a categorical variable, but not advised.
+    
     `Shape` cannot be mapped to a continuous variable, but it can be mapped to a categorical variable.
     
     ```{r}
@@ -73,7 +76,7 @@
     
     Answer:
     
-    The `stroke` aesthetic controls the size of the variable. It works with shape 21.
+    The `stroke` aesthetic controls the width of the border. It works with shape 21.
     
     ```{r}
     ```
@@ -81,10 +84,13 @@
 6.  What happens if you map an aesthetic to something other than a variable 
     name, like `aes(colour = displ < 5)`?  
 
-    Answer: 
+    Answer:
+    
+    It will classify the `displ` to two categories: less than 5, greater or equal to 5. And the plot makes those two categories to two distinct colors.
 
     ```{r}
-
+    ggplot(data=mpg)+
+      geom_point(mapping=aes(x=displ,y=hwy, color=displ<5))
     ```
 
 
@@ -99,6 +105,8 @@
     ```
 
     Answer: 
+    
+    The empty cells show that there is no such car in that category. The above plot just shows the relationship between `drv` and `cyl`. If there is no point for one combination of `drv` and `cyl`, then there is empty plot for this combination of `drv` and `cyl`.
 
     ```{r}
 
@@ -117,6 +125,8 @@
     ```
 
     Answer: 
+    
+    The `.` controls the direction of figures. If written after variable, then plots are arranged vertically. If written before, then plots are arranged horizontally.
 
     ```{r}
 
@@ -135,7 +145,13 @@
     larger dataset?
     
     Answer: 
-
+    
+    The advantages are that the facet clearly classifies `class`, and draw distinct plots for different `class` variable instead of drawing all points in same plot.
+    
+    The disadvantages are that the plots for each category are too small, and points are crowded together.
+    
+    If the variables have too many categories, the color aesthetic would be appropriate. If not, the facet would be appropriate.
+    
     ```{r}
 
     ```
@@ -146,6 +162,8 @@
     A histogram? An area chart?
 
     Answer: 
+    
+    `Geom_line` is used to draw a line chart. `Geom_boxplot` is used to draw a boxplot. `Geom_histogram` is used to draw a histogram. `Geom_area` is used to draw an area chart.
 
     ```{r}
 
@@ -161,6 +179,8 @@
     ```
 
     Answer: 
+    
+    I think the code is going to provide a plot with points between `displ` and `hwy`, with different categories of `drv`. And smoothed lines between `displ` and `hwy` is shown on the plot, categorized by `drv`, but without shaded area.
 
     ```{r}
 
@@ -170,6 +190,8 @@
     Why do you think I used it earlier in the chapter?
 
     Answer: 
+    
+    The `show.legend = FALSE` will suppress the legend of the variable. If removed, the legend is shown on the right of the plot. This is because the `drv` has few categories.
 
     ```{r}
 
@@ -179,6 +201,8 @@
 
 
     Answer: 
+    
+    The `se` argument will show or suppress the shaded area of the line.
 
     ```{r}
 
@@ -197,6 +221,12 @@
     ```
 
     Answer: 
+    
+    The two graphs will look same. 
+    
+    For first plot, it uses `mpg` dataset, and maps `displ` and `hwy`. `geom_point()` draws all points between `displ` and `hwy`. `geom_smooth()` draws a smoothed line between `displ` and `hwy`.
+    
+    For second plot, `geom_point` uses `mpg` dataset, and draws all points between `displ` and `hwy`. `geom_smooth` uses `mpg` dataset, and draws a smoothed line between `displ` and `hwy`.
 
     ```{r}
 
@@ -210,7 +240,9 @@
     Answer: 
     
     ```{r, echo=TRUE, eval=TRUE}
-
+    ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+      geom_point(mapping = aes(color = drv)) + 
+      geom_smooth(mapping = aes(linetype = drv), se = FALSE)
     ```
 
 
@@ -219,7 +251,9 @@
     Answer: 
     
     ```{r, echo=TRUE, eval=TRUE}
-
+    ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+      geom_point(mapping = aes(color = drv, alpha = year)) + 
+      geom_smooth(se = FALSE)
     ```
 
     
@@ -230,7 +264,8 @@
     Answer: 
     
     ```{r, echo=TRUE, eval=TRUE}
-
+    ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+      geom_point(mapping = aes(fill = drv), color = "White", shape = 21, size = 2,  stroke = 1) + annotate("text", x = 3, y = 44, label = "Max hwy = 44")
     ```
 
 # Exercise 4
@@ -240,23 +275,32 @@
     stat function?
 
     Answer: 
+    
+    The default geom is `summary`.
 
     ```{r}
-
+    ggplot(data = diamonds, mapping = aes(x = cut, y = depth)) + 
+      geom_line() + 
+      geom_point(stat = "summary", fun.y = median)
     ```
 
 2.  What does `geom_col()` do? How is it different to `geom_bar()`?
 
     Answer: 
-
+    
+    `geom_col()` uses the height of bars to show the actual value of data. `geom_bar()` uses height to represent the count in each group.
+    
     ```{r}
-
+    
     ```
 
 3.  What variables does `stat_smooth()` compute? What parameters control
     its behaviour?
 
-    Answer: 
+    Answer:
+    
+    `stat_smooth` smooth the density of continuous variables. `method`, `formula`, `se`, `fullrange`, `level` control its behavior.
+    
 
     ```{r}
 
@@ -272,14 +316,19 @@
     ```
 
     Answer: 
+    
+    Many points are overlapping.
 
     ```{r}
-
+    ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+      geom_point(position = 'jitter')
     ```
 
 2.  What parameters to `geom_jitter()` control the amount of jittering?
 
     Answer: 
+    
+    `width` and `height` controls the amount of jittering.
 
     ```{r}
 
@@ -288,6 +337,9 @@
 3.  Compare and contrast `geom_jitter()` with `geom_count()`.
 
     Answer: 
+    
+    Similar: Two functions both draw and display all points between two variables.
+    Difference: `geom_jitter()` displays all points with same size. `geom_count()` displays points with distinct sizes, which is number of cases around each point.
 
     ```{r}
 
@@ -300,12 +352,16 @@
     Answer: 
 
     ```{r}
-
+    ggplot(data = diamonds) + 
+      geom_bar(mapping = aes(x = cut, fill = clarity)) + 
+      coord_polar()
     ```
 
 2.  What does `labs()` do? Read the documentation.
 
     Answer: 
+    
+    `labs()` uses new labels to display variables.
 
     ```{r}
 
@@ -322,7 +378,13 @@
       coord_fixed()
     ```
 
-    Answer: 
+    Answer:
+    
+    There is positive relationship between `cty` and `hwy`. When `cty` is higher, `hwy` tends to be higher.
+    
+    `coord_fixed()` will fix the ratio between units on the x axis and y axis. Otherwise, the plot will look like a flat.
+    
+    `geom_abline()` will add predicted line to the plot.
 
     ```{r}
 
